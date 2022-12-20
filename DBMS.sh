@@ -2,8 +2,6 @@
 <<<<<<< HEAD
 shopt -s extglob
 export LC_COLLATE=C
-=======
->>>>>>> 6f5e05e1bd92d6acb99a331e586eb59ebf0174db
 echo "*-----------------------------*"
 echo "|   Welcome to Myk&O DBMS     |"
 echo "*-----------------------------*"
@@ -15,7 +13,6 @@ while true
 do
 echo "Enter database name?"
 read ans
-<<<<<<< HEAD
 if [[ $ans =~ ^[a-z|A-Z]+$ && ! -d $ans ]] ; then
 mkdir $ans
 echo $ans "DB created successfully"
@@ -24,7 +21,6 @@ else
 echo "table already exists"
 echo "error: Typo"
 fi
-=======
 if [[ $ans =~ [a-zA-Z0-9] ]] ; then
 mkdir $ans
 echo $ans "DB created successfully"
@@ -32,7 +28,6 @@ else
 echo "error: Typo"
 fi
 break
->>>>>>> 6f5e05e1bd92d6acb99a331e586eb59ebf0174db
 done
 ;;
 ListDB)
@@ -41,7 +36,6 @@ ls -F | grep /
 ;;
 ConnectToDB)
 echo "Choose a DB to use"
-<<<<<<< HEAD
 ls -F | grep /
 read ans
 if [[ -d $ans ]] ; then
@@ -86,11 +80,9 @@ rm $name
 echo "Invalid Option"
 esac
 done
-=======
 read ans
 if [[ -d $ans ]] ; then
 cd $ans
->>>>>>> 6f5e05e1bd92d6acb99a331e586eb59ebf0174db
 else
 echo "DB doesn't exist"
 fi
@@ -102,12 +94,9 @@ if [[ -d $ans ]] ; then
 echo "Are you sure? (Y/N)"
 read answer
 if [[ $answer = "Y" ]] ; then
-<<<<<<< HEAD
 rm -r $ans
 echo "$ans DB deleted successfully"
-=======
 rmdir $ans
->>>>>>> 6f5e05e1bd92d6acb99a331e586eb59ebf0174db
 else
 cd $ans
 echo "Ok! You are now using $ans DB"
