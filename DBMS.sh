@@ -62,14 +62,32 @@ function Main_Menu() {
                               ;;
                             esac
                           done
+                          echo "Do you want to put a key on your column?"
+                          select colkey in "Yes" "No"; do
+                            case $colkey in
+                            Yes)
+                              colkey="PrimaryKey"
+                              break
+                              ;;
+                            No)
+                              echo "No key added!"
+                              break
+                              ;;
+                            *)
+                              exit
+                              ;;
+                            esac
+                          done
+
                           if [[ i -eq $colno ]]; then
                             echo -n "$colname : $coltype" >>$TableName
                           elif [[ i -eq 1 ]]; then
-                            echo -n "$colname : $coltype : " "PrimaryKey | " >>$TableName
+                            echo -n "$colname : $coltype : $colkey | " >>$TableName
                           else
-                            echo -n "$colname : $coltype |" >>$TableName
+                            echo -n "$colname : $coltype | " >>$TableName
                           fi
                         done
+                        echo -e "\n" >>$TableName
                         echo "$TableName has been created!"
                         break
                         Main_Table_Menu
@@ -99,13 +117,84 @@ function Main_Menu() {
                   fi
                 done
                 ;;
-              InsertTable) ;;
+              InsertTable)
+                echo "Available tables : "
+                ls -F
+                read -p "Enter table Name: " insertb
 
-              SelectFromTable) ;;
+                if [[ -f $insertb ]]; then
+                  typeset -i colno=$(awk -F"|" '{if(NR==1){print NF}}' $insertb)
 
-              DeleteFromTable) ;;
+                  for ((i = 1; i <= $colno; i++)); do
+                    colname=$(awk -F"|" -v"i=$i" '{if(NR==1){print $i}}' $insertb)
+                    coltype=$(awk -F"|" -v"i=$i" '{if(NR==1){print $i}}' $insertb)
 
-              UpdateTable) ;;
+                    while true; do
+                      read -p "Enter $colname " value
+
+                      if [[ $i != $colno ]]; then
+
+                        echo -n $value"|" >>$insertb
+                        echo "Value 1 Added!"
+                        break
+                      else
+                        echo -n $value >>$insertb
+                        echo "Value 2 Added!"
+                        break
+                      fi
+
+                    done
+
+                  done
+
+                else
+
+                  echo "$insertb doesn't exist"
+                fi
+                Main_Table_Menu
+                ;;
+              SelectFromTable)
+                echo "Available tables : "
+                ls -F
+                read -p "Enter table Name: " SelectedTable
+
+                if [[ -f $SelectedTable ]]; then
+                  typeset -i colno=$(awk -F"|" '{if(NR==1){print NF}}' $SelectedTable)
+                  echo "Choose the type of selection: "
+                  select TypeOfSelect in "SelectAllFromTable" "SelectSpecificColumn"; do
+                    case $TypeOfSelect in
+                    SelectAllFromTable)
+                      cat $SelectedTable
+                      ;;
+                    SelectSpecificColumn)
+                      
+                      for ((i = 1; i <= $colno; i++)); do
+                        read -p "Enter the column name: " colname
+
+                        echo "Here is what you want!"
+                        cut -d "|" -f $i $SelectedTable
+
+                      done
+                      ;;
+                    *)
+                      echo "Invalid option"
+                      ;;
+                    esac
+                  done
+                else
+                  echo "Table doesn't exist"
+                fi
+
+                ;;
+              DeleteFromTable) 
+
+              ;;
+              UpdateTable)
+                echo "Available tables : "
+                ls -F
+                read -p "Enter table Name: " updatedtb
+
+                ;;
 
               *)
                 echo "Invalid Option"
